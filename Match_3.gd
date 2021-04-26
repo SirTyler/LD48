@@ -5,7 +5,7 @@ var normal_start = 2
 export (int) var difficulty = 0
 export (int) var y_offset = 2
 export (float) var level_scale = 1.5
-export (int) var level_start = 75
+export (int) var level_start = 5
 export (int) var fill_lines = 3
 
 export (bool) var toggle_delete_debug = true
@@ -478,6 +478,7 @@ func _post_score():
 		$ding.play()
 		SceneChanger.layer = 0
 		drill.get_node("AnimatedSprite").visible = false
+		level_up_ui._check_skills()
 		level_up_ui.visible = true
 	else:
 		_on_level_GUI_CLOSE()
@@ -501,7 +502,6 @@ func _on_refill_timeout():
 func has_skill_name(id: String) -> bool:
 	for i in skills:
 		if(i == id):
-			print ("%s is %s" % [i, id])
 			return i[0]
 	return false
 
@@ -533,7 +533,7 @@ func _on_level_GUI_CLOSE():
 	SceneChanger.layer = 1
 	drill.get_node("AnimatedSprite").visible = true
 	score_bar.max_value = ceil(score_bar.max_value * level_scale)
-	#level_up_ui._check_skills()
+	level_up_ui._check_skills()
 	if(level_up_ui.skills_left() > 0):
 		score_bar.value = 0
 	else:

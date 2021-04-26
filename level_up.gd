@@ -1,6 +1,7 @@
 extends Node
 
 export (int) var offset = 96
+var disabled = false
 
 signal GUI_CLOSE
 
@@ -48,6 +49,7 @@ func has_skill_name(id: String) -> bool:
 	return false
 
 func _generate_skills():
+	disabled = true
 	for i in skills.size():
 		var node = skill_base.instance()
 		var button = node.get_node("Button")
@@ -63,8 +65,10 @@ func _generate_skills():
 		self.add_child(node)
 		skills[i].append(node)
 	_disable_unowned_preq()
+	disabled = false
 
 func _check_skills():
+	disabled = true
 	skills_owned.clear()
 	for i in skills.size():
 		var node = skills[i][4]
@@ -76,21 +80,30 @@ func _check_skills():
 		else:
 			button.disabled = false
 	_disable_unowned_preq()
+	disabled = false
 
 func _disable_unowned_preq():
+	disabled = true
 	for i in skills.size():
 		var node = skills[i][4]
 		var button = node.get_node("Button")
-		if(not owns_skill_name(skills[i][1])):
-				var preq = skills[i][3]
-				if(preq != null and owns_skill_name(preq)):
-					button.disabled = false
-				elif(preq == null):
-					button.disabled = false
-				else:
-					button.disabled = true
+		var skill_ref = skills[i][1]
+		var preq = skills[i][3]
+		
+		if(preq != null):
+			if(owns_skill_name(preq)):
+				button.disabled = false
+			else:
+				button.disabled = true
+		else:
+			button.disabled = false
+		
+		if(skills[i][2]):
+			button.disabled = true
+	disabled = false
 
 func _skill_toggle(value):
+	if(disabled): return
 	var close = false
 	for i in skills.size():
 		var node = skills[i][4]
@@ -99,12 +112,10 @@ func _skill_toggle(value):
 			if(not owns_skill_name(skills[i][1])):
 				var preq = skills[i][3]
 				if(preq != null and owns_skill_name(preq)):
-					skills_owned.append(skills[i][1])
 					skills[i][2] = true
 					button.disabled = true
 					close = true
 				elif(preq == null):
-					skills_owned.append(skills[i][1])
 					skills[i][2] = true
 					button.disabled = true
 					close = true
