@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/skill.png" type="Texture" id=1]
+
+[node name="Skill" type="Node2D"]
+
+[node name="Button" type="CheckButton" parent="."]
+margin_left = 64.0
+margin_right = 575.0
+margin_bottom = 72.0
+icon = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Button"]
+margin_left = 98.0
+margin_top = 6.0
+margin_right = 459.0
+margin_bottom = 65.0
+input_pass_on_modal_close_click = false
+text = "SKILL"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
